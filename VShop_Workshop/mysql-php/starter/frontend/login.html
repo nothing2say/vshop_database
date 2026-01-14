@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - V-Shop</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-laptop"></i> V-Shop
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- Alert Messages -->
+                    <div id="alertContainer"></div>
+
+                    <!-- Login Card -->
+                    <div class="card auth-card">
+                        <div class="auth-header">
+                            <i class="bi bi-person-circle"></i>
+                            <h2 class="mb-0">เข้าสู่ระบบ</h2>
+                            <p class="mb-0 mt-2 opacity-75">ยินดีต้อนรับกลับมา!</p>
+                        </div>
+
+                        <div class="auth-body">
+                            <form id="loginForm">
+                                <!-- Email -->
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="email" placeholder="อีเมล" required>
+                                    <label for="email"><i class="bi bi-envelope me-2"></i>อีเมล</label>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-floating mb-3 position-relative">
+                                    <input type="password" class="form-control" id="password" placeholder="รหัสผ่าน" required>
+                                    <label for="password"><i class="bi bi-lock me-2"></i>รหัสผ่าน</label>
+                                    <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+                                            onclick="VShopAuth.togglePasswordVisibility('password', 'passwordIcon')"
+                                            style="z-index: 10;">
+                                        <i class="bi bi-eye" id="passwordIcon"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Remember Me -->
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">
+                                        จำฉันไว้ในระบบ
+                                    </label>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>เข้าสู่ระบบ
+                                </button>
+
+                                <!-- Divider -->
+                                <div class="text-center mb-3">
+                                    <small class="text-muted">หรือ</small>
+                                </div>
+
+                                <!-- Register Link -->
+                                <a href="register.html" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-person-plus me-2"></i>สมัครสมาชิกใหม่
+                                </a>
+
+                                <!-- Back to Home -->
+                                <div class="text-center mt-3">
+                                    <a href="index.html" class="text-decoration-none">
+                                        <i class="bi bi-arrow-left me-1"></i>กลับไปหน้าแรก
+                                    </a>
+                                </div>
+                            </form>
+
+                            <!-- Test Accounts Info -->
+                            <div class="alert alert-info mt-4 mb-0">
+                                <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>บัญชีทดสอบ</h6>
+                                <hr>
+                                <small>
+                                    <strong>Admin:</strong><br>
+                                    <code>admin@vshop.com</code> / <code>password123</code>
+                                    <br><br>
+                                    <strong>ลูกค้า:</strong><br>
+                                    <code>somchai@email.com</code> / <code>password123</code>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-auto">
+        <div class="container text-center">
+            <small>&copy; 2025 V-Shop. All rights reserved.</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <script>
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', VShopAuth.handleLoginSubmit);
+
+        // Check if already logged in and handle error messages
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // ถ้ามี error=unauthorized แสดงข้อความแจ้งเตือน
+            if (urlParams.get('error') === 'unauthorized') {
+                if (window.VShopAPI && window.VShopAPI.showAlert) {
+                    window.VShopAPI.showAlert('กรุณาเข้าสู่ระบบด้วยบัญชี Admin เพื่อเข้าถึงหน้านี้', 'warning');
+                }
+            }
+
+            // ถ้า login อยู่แล้ว redirect ไป
+            if (VShopAuth.isLoggedIn()) {
+                const redirect = urlParams.get('redirect') || 'index.html';
+                window.location.href = redirect;
+            }
+        });
+    </script>
+</body>
+</html>

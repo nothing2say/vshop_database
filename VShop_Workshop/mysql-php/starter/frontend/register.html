@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก - V-Shop</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-laptop"></i> V-Shop
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- Alert Messages -->
+                    <div id="alertContainer"></div>
+
+                    <!-- Register Card -->
+                    <div class="card auth-card">
+                        <div class="auth-header">
+                            <i class="bi bi-person-plus"></i>
+                            <h2 class="mb-0">สมัครสมาชิก</h2>
+                            <p class="mb-0 mt-2 opacity-75">สร้างบัญชีใหม่</p>
+                        </div>
+
+                        <div class="auth-body">
+                            <form id="registerForm">
+                                <!-- Name -->
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="name" placeholder="ชื่อ-นามสกุล" required>
+                                    <label for="name"><i class="bi bi-person me-2"></i>ชื่อ-นามสกุล</label>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="email" placeholder="อีเมล" required>
+                                    <label for="email"><i class="bi bi-envelope me-2"></i>อีเมล</label>
+                                    <div class="form-text">ใช้สำหรับเข้าสู่ระบบ</div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="form-floating mb-3">
+                                    <input type="tel" class="form-control" id="phone" placeholder="เบอร์โทรศัพท์" pattern="[0-9]{10}">
+                                    <label for="phone"><i class="bi bi-telephone me-2"></i>เบอร์โทรศัพท์</label>
+                                    <div class="form-text">10 หลัก (ไม่ต้องใส่ขีด)</div>
+                                </div>
+
+                                <!-- Address -->
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="address" placeholder="ที่อยู่" style="height: 100px"></textarea>
+                                    <label for="address"><i class="bi bi-geo-alt me-2"></i>ที่อยู่สำหรับจัดส่ง (ถ้ามี)</label>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-floating mb-3 position-relative">
+                                    <input type="password" class="form-control" id="password" placeholder="รหัสผ่าน" required minlength="6">
+                                    <label for="password"><i class="bi bi-lock me-2"></i>รหัสผ่าน</label>
+                                    <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+                                            onclick="VShopAuth.togglePasswordVisibility('password', 'passwordIcon')"
+                                            style="z-index: 10;">
+                                        <i class="bi bi-eye" id="passwordIcon"></i>
+                                    </button>
+                                    <div class="form-text">อย่างน้อย 6 ตัวอักษร</div>
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="form-floating mb-3 position-relative">
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="ยืนยันรหัสผ่าน" required minlength="6">
+                                    <label for="confirmPassword"><i class="bi bi-lock-fill me-2"></i>ยืนยันรหัสผ่าน</label>
+                                    <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+                                            onclick="VShopAuth.togglePasswordVisibility('confirmPassword', 'confirmPasswordIcon')"
+                                            style="z-index: 10;">
+                                        <i class="bi bi-eye" id="confirmPasswordIcon"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Terms & Conditions -->
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                                    <label class="form-check-label" for="acceptTerms">
+                                        ยอมรับ <a href="#" class="text-decoration-none">เงื่อนไขการใช้งาน</a> และ <a href="#" class="text-decoration-none">นโยบายความเป็นส่วนตัว</a>
+                                    </label>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                                    <i class="bi bi-person-plus me-2"></i>สมัครสมาชิก
+                                </button>
+
+                                <!-- Divider -->
+                                <div class="text-center mb-3">
+                                    <small class="text-muted">มีบัญชีอยู่แล้ว?</small>
+                                </div>
+
+                                <!-- Login Link -->
+                                <a href="login.html" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>เข้าสู่ระบบ
+                                </a>
+
+                                <!-- Back to Home -->
+                                <div class="text-center mt-3">
+                                    <a href="index.html" class="text-decoration-none">
+                                        <i class="bi bi-arrow-left me-1"></i>กลับไปหน้าแรก
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-auto">
+        <div class="container text-center">
+            <small>&copy; 2025 V-Shop. All rights reserved.</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <script>
+        // Handle register form submission
+        document.getElementById('registerForm').addEventListener('submit', VShopAuth.handleRegisterSubmit);
+
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            if (VShopAuth.isLoggedIn()) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Real-time password match validation
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+
+        confirmPassword.addEventListener('input', () => {
+            if (confirmPassword.value && password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity('รหัสผ่านไม่ตรงกัน');
+            } else {
+                confirmPassword.setCustomValidity('');
+            }
+        });
+
+        password.addEventListener('input', () => {
+            if (confirmPassword.value && password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity('รหัสผ่านไม่ตรงกัน');
+            } else {
+                confirmPassword.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ชำระเงิน - V-Shop</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-laptop"></i> V-Shop
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+        <!-- Checkout Steps -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center flex-fill">
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-cart-check"></i>
+                        </div>
+                        <div class="small mt-1">ตะกร้าสินค้า</div>
+                    </div>
+                    <div class="flex-fill" style="height: 2px; background-color: #0d6efd;"></div>
+                    <div class="text-center flex-fill">
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <div class="small mt-1">ชำระเงิน</div>
+                    </div>
+                    <div class="flex-fill" style="height: 2px; background-color: #dee2e6;"></div>
+                    <div class="text-center flex-fill">
+                        <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="small mt-1">เสร็จสิ้น</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Checkout Form (Left Column) -->
+            <div class="col-lg-7">
+                <form id="checkoutForm">
+                    <!-- Shipping Information -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-truck me-2"></i>ข้อมูลการจัดส่ง</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">ชื่อ-นามสกุล <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="fullName" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">เบอร์โทรศัพท์ <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">อีเมล <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">ที่อยู่ <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="address" rows="3" required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="city" class="form-label">จังหวัด <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="city" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="postalCode" class="form-label">รหัสไปรษณีย์ <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="postalCode" pattern="[0-9]{5}" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-credit-card me-2"></i>วิธีการชำระเงิน</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="credit_card" checked>
+                                <label class="form-check-label" for="creditCard">
+                                    <i class="bi bi-credit-card me-2"></i>บัตรเครดิต/เดบิต
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="bankTransfer" value="bank_transfer">
+                                <label class="form-check-label" for="bankTransfer">
+                                    <i class="bi bi-bank me-2"></i>โอนเงินผ่านบัญชีธนาคาร
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cash_on_delivery">
+                                <label class="form-check-label" for="cod">
+                                    <i class="bi bi-cash me-2"></i>ชำระเงินปลายทาง (COD)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Notes -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-sticky me-2"></i>หมายเหตุ (ถ้ามี)</h5>
+                        </div>
+                        <div class="card-body">
+                            <textarea class="form-control" id="notes" rows="3" placeholder="เช่น เวลาจัดส่งที่สะดวก, คำขออื่นๆ"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary (Right Column) -->
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>สรุปคำสั่งซื้อ</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Order Items -->
+                        <div id="orderItems" class="mb-3">
+                            <!-- Items loaded by JavaScript -->
+                        </div>
+
+                        <hr>
+
+                        <!-- Summary -->
+                        <div class="summary-row">
+                            <span>ยอดรวมสินค้า</span>
+                            <span id="subtotal">฿0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>ค่าจัดส่ง</span>
+                            <span id="shippingCost">฿0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>ยอดรวมทั้งหมด</span>
+                            <span id="total" class="text-primary">฿0.00</span>
+                        </div>
+
+                        <hr>
+
+                        <!-- Place Order Button -->
+                        <button type="submit" form="checkoutForm" class="btn btn-primary w-100 py-3" id="placeOrderBtn">
+                            <i class="bi bi-check-circle me-2"></i>ยืนยันคำสั่งซื้อ
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <a href="cart.html" class="text-decoration-none">
+                                <i class="bi bi-arrow-left me-1"></i>กลับไปตะกร้าสินค้า
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <small>&copy; 2025 V-Shop. All rights reserved.</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <script>
+        // Checkout page logic
+        const { formatPrice } = window.VShopConfig;
+        const { getCart, createOrder, showAlert, handleApiError } = window.VShopAPI;
+        const { getCurrentUser, escapeHtml } = window.VShopAuth;
+
+        let cartData = null;
+
+        // Load cart and populate form
+        async function initCheckout() {
+            try {
+                // Load cart
+                const response = await getCart();
+                cartData = response.data;
+
+                if (!cartData || !cartData.items || cartData.items.length === 0) {
+                    showAlert('ตะกร้าสินค้าว่างเปล่า', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'cart.html';
+                    }, 1500);
+                    return;
+                }
+
+                // Display order items
+                displayOrderItems(cartData.items);
+                displayOrderSummary(cartData.summary);
+
+                // Pre-fill user data
+                const user = getCurrentUser();
+                if (user) {
+                    document.getElementById('fullName').value = user.name || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('address').value = user.address || '';
+                }
+
+            } catch (error) {
+                handleApiError(error);
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 2000);
+            }
+        }
+
+        function displayOrderItems(items) {
+            const orderItems = document.getElementById('orderItems');
+            if (!orderItems || !items) return;
+
+            let html = '';
+            items.forEach(item => {
+                const subtotal = parseFloat(item.quantity) * parseFloat(item.price);
+                html += `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <strong>${escapeHtml(item.name)}</strong>
+                            <br>
+                            <small class="text-muted">จำนวน: ${item.quantity} x ${formatPrice(parseFloat(item.price))}</small>
+                        </div>
+                        <div class="text-end">
+                            ${formatPrice(subtotal)}
+                        </div>
+                    </div>
+                `;
+            });
+            orderItems.innerHTML = html;
+        }
+
+        function displayOrderSummary(summary) {
+            if (!summary) return;
+
+            const subtotal = parseFloat(summary.subtotal || 0);
+            const shippingCost = parseFloat(summary.shipping_cost || 0);
+            const total = subtotal + shippingCost;
+
+            document.getElementById('subtotal').textContent = formatPrice(subtotal);
+            document.getElementById('shippingCost').textContent = shippingCost === 0 ? 'ฟรี' : formatPrice(shippingCost);
+            document.getElementById('total').textContent = formatPrice(total);
+        }
+
+        // Handle form submission
+        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('placeOrderBtn');
+            const originalBtnText = submitBtn.innerHTML;
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>กำลังดำเนินการ...';
+
+                // Collect form data
+                const orderData = {
+                    shipping_address: {
+                        full_name: document.getElementById('fullName').value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        address: document.getElementById('address').value.trim(),
+                        city: document.getElementById('city').value.trim(),
+                        postal_code: document.getElementById('postalCode').value.trim()
+                    },
+                    payment_method: document.querySelector('input[name="paymentMethod"]:checked').value,
+                    notes: document.getElementById('notes').value.trim()
+                };
+
+                // Create order
+                const response = await createOrder(orderData);
+
+                showAlert('สั่งซื้อสำเร็จ! กำลังนำคุณไปยังหน้าคำสั่งซื้อ...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'orders.html';
+                }, 1500);
+
+            } catch (error) {
+                handleApiError(error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initCheckout);
+    </script>
+</body>
+</html>

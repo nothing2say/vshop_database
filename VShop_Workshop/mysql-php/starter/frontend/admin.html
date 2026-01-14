@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - V-Shop</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Auth Check Overlay - ซ่อน content จนกว่าจะตรวจสอบ login เสร็จ -->
+    <div id="authCheckOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center" style="z-index: 9999;">
+        <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted">กำลังตรวจสอบสิทธิ์...</p>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin.html">
+                <i class="bi bi-speedometer2"></i> Admin Panel
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <a class="btn btn-outline-light btn-sm" href="index.html" target="_blank">
+                            <i class="bi bi-box-arrow-up-right me-1"></i> ดูหน้าร้าน
+                        </a>
+                    </li>
+                    <!-- User Menu -->
+                    <li class="nav-item">
+                        <div id="userNav">
+                            <!-- Loading -->
+                            <div class="spinner-border spinner-border-sm text-light" role="status"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark admin-sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="admin-nav-link active" href="admin.html">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="admin-nav-link" href="#" onclick="showSection('products'); return false;">
+                                <i class="bi bi-box"></i> จัดการสินค้า
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="admin-nav-link" href="#" onclick="showSection('orders'); return false;">
+                                <i class="bi bi-cart-check"></i> จัดการคำสั่งซื้อ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="admin-nav-link" href="#" onclick="showSection('categories'); return false;">
+                                <i class="bi bi-tags"></i> จัดการหมวดหมู่
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="admin-nav-link" href="#" onclick="showSection('customers'); return false;">
+                                <i class="bi bi-people"></i> จัดการลูกค้า
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 admin-content">
+                <!-- Alert Messages -->
+                <div id="alertContainer"></div>
+
+                <!-- Dashboard Section -->
+                <div id="dashboardSection">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Dashboard</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-calendar3"></i> วันนี้
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-calendar-week"></i> สัปดาห์นี้
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-calendar-month"></i> เดือนนี้
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <p class="stats-label mb-1">ยอดขายวันนี้</p>
+                                            <h3 class="stats-value mb-0" id="todaySales">฿0</h3>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-currency-dollar display-4 text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card success">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <p class="stats-label mb-1">คำสั่งซื้อใหม่</p>
+                                            <h3 class="stats-value text-success mb-0" id="newOrders">0</h3>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-cart-check display-4 text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card warning">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <p class="stats-label mb-1">สินค้าใกล้หมด</p>
+                                            <h3 class="stats-value text-warning mb-0" id="lowStock">0</h3>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-exclamation-triangle display-4 text-warning"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card danger">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <p class="stats-label mb-1">ลูกค้าทั้งหมด</p>
+                                            <h3 class="stats-value text-info mb-0" id="totalCustomers">0</h3>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-people display-4 text-info"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-cart-check me-2"></i>คำสั่งซื้อล่าสุด</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>หมายเลขคำสั่งซื้อ</th>
+                                            <th>ลูกค้า</th>
+                                            <th>วันที่</th>
+                                            <th class="text-end">ยอดรวม</th>
+                                            <th class="text-center">สถานะ</th>
+                                            <th class="text-center">จัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentOrdersList">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Products -->
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>สินค้าใกล้หมด</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>สินค้า</th>
+                                            <th>หมวดหมู่</th>
+                                            <th class="text-end">ราคา</th>
+                                            <th class="text-center">คงเหลือ</th>
+                                            <th class="text-center">จัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lowStockList">
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Sections (Placeholder) -->
+                <div id="productsSection" style="display: none;">
+                    <h2>จัดการสินค้า</h2>
+                    <p class="text-muted">ฟีเจอร์นี้กำลังพัฒนา - นักเรียนจะต้องสร้างเอง!</p>
+                    <div class="alert alert-info">
+                        <h5>📝 ฟีเจอร์ที่ต้องทำ:</h5>
+                        <ul>
+                            <li>แสดงรายการสินค้าทั้งหมด (ตาราง)</li>
+                            <li>เพิ่มสินค้าใหม่ (Modal form)</li>
+                            <li>แก้ไขสินค้า (Modal form)</li>
+                            <li>ลบสินค้า (ยืนยันก่อนลบ)</li>
+                            <li>ค้นหาและกรองสินค้า</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="ordersSection" style="display: none;">
+                    <h2>จัดการคำสั่งซื้อ</h2>
+                    <p class="text-muted">ฟีเจอร์นี้กำลังพัฒนา - นักเรียนจะต้องสร้างเอง!</p>
+                </div>
+
+                <div id="categoriesSection" style="display: none;">
+                    <h2>จัดการหมวดหมู่</h2>
+                    <p class="text-muted">ฟีเจอร์นี้กำลังพัฒนา - นักเรียนจะต้องสร้างเอง!</p>
+                </div>
+
+                <div id="customersSection" style="display: none;">
+                    <h2>จัดการลูกค้า</h2>
+                    <p class="text-muted">ฟีเจอร์นี้กำลังพัฒนา - นักเรียนจะต้องสร้างเอง!</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <script>
+        // Admin dashboard logic
+        const { formatPrice, formatDateShort, getOrderStatus } = window.VShopConfig;
+        const { getAllOrders, getAllProducts, handleApiError } = window.VShopAPI;
+        const { escapeHtml, getCurrentUser } = window.VShopAuth;
+
+        /**
+         * ตรวจสอบสิทธิ์ Admin ก่อนแสดงหน้า
+         */
+        function checkAdminAuth() {
+            const user = getCurrentUser();
+
+            // ถ้าไม่ได้ login หรือไม่ใช่ admin
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'login.html?redirect=admin.html&error=unauthorized';
+                return false;
+            }
+
+            // ลบ overlay ออกเลย
+            const overlay = document.getElementById('authCheckOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+
+            return true;
+        }
+
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('productsSection').style.display = 'none';
+            document.getElementById('ordersSection').style.display = 'none';
+            document.getElementById('categoriesSection').style.display = 'none';
+            document.getElementById('customersSection').style.display = 'none';
+
+            // Show selected section
+            document.getElementById(section + 'Section').style.display = 'block';
+
+            // Update active nav link
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        async function initDashboard() {
+            try {
+                // Load dashboard data
+                await Promise.all([
+                    loadRecentOrders(),
+                    loadLowStockProducts(),
+                    loadStats()
+                ]);
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                if (handleApiError) handleApiError(error);
+            }
+        }
+
+        async function loadRecentOrders() {
+            try {
+                const response = await getAllOrders({ limit: 5, sort: 'newest' });
+                const orders = response.data?.orders || [];
+
+                const tbody = document.getElementById('recentOrdersList');
+                if (!tbody) return;
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">ยังไม่มีคำสั่งซื้อ</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                orders.forEach(order => {
+                    const status = getOrderStatus(order.status);
+                    html += `
+                        <tr>
+                            <td><strong>#${escapeHtml(order.order_number || order.id)}</strong></td>
+                            <td>${escapeHtml(order.customer_name || 'ลูกค้า')}</td>
+                            <td>${formatDateShort(order.order_date || order.created_at)}</td>
+                            <td class="text-end">${formatPrice(parseFloat(order.total_amount))}</td>
+                            <td class="text-center">
+                                <span class="badge ${status.badge}">${status.text}</span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-primary" title="ดูรายละเอียด">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading recent orders:', error);
+                document.getElementById('recentOrdersList').innerHTML =
+                    '<tr><td colspan="6" class="text-center text-muted py-4">ไม่สามารถโหลดข้อมูลได้</td></tr>';
+            }
+        }
+
+        async function loadLowStockProducts() {
+            try {
+                const response = await getAllProducts({ sort: 'stock_asc', limit: 5 });
+                const products = response.data?.products || [];
+
+                const tbody = document.getElementById('lowStockList');
+                if (!tbody) return;
+
+                const lowStock = products.filter(p => parseInt(p.stock) < 10);
+
+                if (lowStock.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-success py-4"><i class="bi bi-check-circle me-2"></i>ไม่มีสินค้าใกล้หมด</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                lowStock.forEach(product => {
+                    html += `
+                        <tr>
+                            <td><strong>${escapeHtml(product.name)}</strong></td>
+                            <td>${escapeHtml(product.category_name || '-')}</td>
+                            <td class="text-end">${formatPrice(parseFloat(product.price))}</td>
+                            <td class="text-center">
+                                <span class="badge ${parseInt(product.stock) === 0 ? 'bg-danger' : 'bg-warning text-dark'}">
+                                    ${product.stock} ชิ้น
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-primary" title="เติมสต็อก">
+                                    <i class="bi bi-plus-circle"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading low stock products:', error);
+                document.getElementById('lowStockList').innerHTML =
+                    '<tr><td colspan="5" class="text-center text-muted py-4">ไม่สามารถโหลดข้อมูลได้</td></tr>';
+            }
+        }
+
+        async function loadStats() {
+            try {
+                // TODO: Implement real stats API
+                document.getElementById('todaySales').textContent = '฿0';
+                document.getElementById('newOrders').textContent = '0';
+                document.getElementById('lowStock').textContent = '0';
+                document.getElementById('totalCustomers').textContent = '0';
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Initialize - รอให้ auth check เสร็จก่อน แล้วค่อย load dashboard
+        document.addEventListener('DOMContentLoaded', async function() {
+            // รอให้ auth.js ตรวจสอบ session เสร็จก่อน
+            await window.VShopAuth.authReady;
+
+            if (checkAdminAuth()) {
+                initDashboard();
+            }
+        });
+
+        // Export for onclick handlers
+        window.showSection = showSection;
+    </script>
+</body>
+</html>
